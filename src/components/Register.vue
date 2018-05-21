@@ -11,7 +11,7 @@
         <v-form ref="registerForm" class="pa-4 elevation-4 round-corner">
           <v-text-field
             v-model="name"
-            :rules="formRules.nameField"
+            :rules="validationRules.nameField"
             :disabled="isRegistering"
             label="Nome"
             prepend-icon="person"
@@ -19,20 +19,20 @@
           ></v-text-field>
           <v-text-field
             v-model="cpf"
-            :rules="formRules.cpfField"
+            :rules="validationRules.cpfField"
             :counter="11"
             :disabled="isRegistering"
             label="CPF"
-            prepend-icon="person"
+            prepend-icon="credit_card"
             required
           ></v-text-field>
           <v-text-field
             v-model="register"
-            :rules="formRules.registerField"
+            :rules="validationRules.registerField"
             :counter="4"
             :disabled="isRegistering"
             label="Matrícula"
-            prepend-icon="person"
+            prepend-icon="money"
             required
           ></v-text-field>
           <v-text-field
@@ -40,7 +40,7 @@
             :append-icon="passType ? 'visibility' : 'visibility_off'"
             :append-icon-cb="() => (passType = !passType)"
             :type="passType ? 'password' : 'text'"
-            :rules="formRules.passField"
+            :rules="validationRules.passField"
             :disabled="isRegistering"
             label="Senha"
             prepend-icon="lock"
@@ -51,6 +51,18 @@
             <v-spacer></v-spacer>
             <v-btn color="primary" :loading="isRegistering" @click="attemptToRegister">Cadastrar</v-btn>
           </v-layout>
+          <v-dialog v-model="dialog.status" persistent max-width="320">
+            <v-card>
+              <v-card-title class="headline">{{ dialog.title }}</v-card-title>
+              <v-card-text>{{ dialog.message }}</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn :to="dialog.route" :color="dialog.color" flat="flat" @click.native="dialog.status = false">
+                  {{ dialog.button }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-form>
       </v-flex>
     </v-layout>
@@ -59,9 +71,11 @@
 
 <script>
 import xs from 'xstream'
+import validationRules from '../handler/validation'
 import { insertClient } from '../handler/network'
 
 export default {
+  name: 'Register',
   data () {
     return {
       name: '',
@@ -70,21 +84,17 @@ export default {
       password: '',
       passType: true,
       isRegistering: false,
+      dialog: {
+        status: false,
+        title: '',
+        message: '',
+        button: '',
+        color: '',
+        route: ''
+      },
       loginRoute: '/client/login',
-      formRules: {
-        nameField: [
-          input => /^[a-zA-Z]{3,}$/.test(input) || 'O nome deve conter apenas letras'
-        ],
-        cpfField: [
-          input => /^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}-?[0-9]{2}$/.test(input) || 'CPF Inválido'
-        ],
-        registerField: [
-          input => /^\d{4}$/.test(input) || 'A matrícula deve conter 4 dígitos'
-        ],
-        passField: [
-          input => /^\d{4,}$/.test(input) || 'A senha deve conter pelo menos 4 dígitos'
-        ]
-      }
+      registerRoute: '/client/register',
+      validationRules: validationRules
     }
   },
   methods: {
@@ -103,8 +113,22 @@ export default {
           .map(clientSaved => clientSaved.cpf === clientToSave.cpf)
           .subscribe({
             next: result => {
-              if (result) console.log('usuário cadastrado')
-              else console.log('problemas durante o cadastro')
+              if (result) {
+                this.dialog.title = 'Cadastrado com sucesso'
+                this.dialog.message = 'Dirija-se ao refeitório com sua carterinha estudantil e finalize seu cadastro!'
+                this.dialog.button = 'Ir ao Login'
+                this.dialog.color = 'green darken-1'
+                this.dialog.route = this.loginRoute
+              } else {
+                this.dialog.title = 'Problemas no cadastro'
+                this.dialog.message = 'Tente novamente mais tarde!'
+                this.dialog.button = 'Fechar'
+                this.dialog.color = 'red darken-1'
+                this.dialog.route = this.registerRoute
+              }
+
+              this.isRegistering = false
+              this.dialog.status = true
             }
           })
       }
