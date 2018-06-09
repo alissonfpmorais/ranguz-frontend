@@ -28,9 +28,12 @@
       </v-btn> -->
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-btn v-show="isLogged" flat @click="logout">Logout</v-btn>
+      </v-toolbar-items>
     </v-toolbar>
     <v-content>
-      <router-view />
+      <router-view :key="$route.fullPath" @isLoggedIn="login"/>
     </v-content>
     <!-- <v-footer :fixed="fixed" app>
       <span>&copy; 2017</span>
@@ -48,12 +51,32 @@ export default {
       fixed: false,
       items: [
         { icon: 'shopping_basket', title: 'Pedidos', route: '/' },
-        { icon: 'supervisor_account', title: 'Administrador', route: '/admin/login' },
-        { icon: 'person', title: 'Cliente', route: '/client/login' }
+        { icon: 'person', title: 'Usuário', route: '/login' }
       ],
       miniVariant: false,
-      title: 'Ranguz'
+      isLogged: false,
+      title: 'Ranguz',
+      loginRoute: '/login'
     }
+  },
+  methods: {
+    getCredentials () {
+      return JSON.parse(localStorage.getItem('credentials'))
+    },
+    login () {
+      if (this.getCredentials()) this.isLogged = true
+    },
+    logout () {
+      if (this.getCredentials()) {
+        const path = this.$router.history.current.path
+        this.isLogged = false
+        localStorage.clear()
+        if (path === '/client/shopping' || path === '/admin/store') this.$router.push(this.loginRoute)
+      }
+    }
+  },
+  mounted: function () {
+    this.login()
   }
 }
 </script>

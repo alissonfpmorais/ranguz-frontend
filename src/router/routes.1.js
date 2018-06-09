@@ -1,6 +1,5 @@
 import Main from '@/components/Main'
 import Login from '@/components/Login'
-import Store from '@/components/Store'
 import Register from '@/components/Register'
 import Shopping from '@/components/Shopping'
 
@@ -11,14 +10,14 @@ const routes = [
     component: Main
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: '/admin/login',
+    name: 'AdminLogin',
     component: Login
   },
   {
-    path: '/admin/store',
-    name: 'Store',
-    component: Store
+    path: '/client/login',
+    name: 'ClientLogin',
+    component: Login
   },
   {
     path: '/client/register',

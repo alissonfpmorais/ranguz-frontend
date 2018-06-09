@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-layout column>
       <v-list>
-        <v-subheader class="success white--text">Última Sincronização: {{ lastSync }}</v-subheader>
+        <v-subheader class="primary white--text">Última Sincronização: {{ lastSync }}</v-subheader>
         <v-list-group
           v-for="order in orders"
           v-model="order.active"
@@ -12,7 +12,8 @@
         >
           <v-list-tile class="py-3" slot="activator">
             <v-list-tile-content>
-              <v-list-tile-title>Matrícula: {{ order.client.register }}</v-list-tile-title>
+              <v-list-tile-title class="title">{{ order.client.name }}</v-list-tile-title>
+              <v-list-tile-sub-title class="text--primary">Matrícula: {{ order.client.register }}</v-list-tile-sub-title>
               <v-list-tile-sub-title>Pedido: {{ order.id }}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>

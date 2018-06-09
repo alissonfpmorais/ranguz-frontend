@@ -46,6 +46,15 @@
             prepend-icon="lock"
             required
           ></v-text-field>
+          <v-text-field
+            v-model="rfid"
+            :rules="validationRules.rfidField"
+            :counter="8"
+            :disabled="isRegistering"
+            label="RFID"
+            prepend-icon="nfc"
+            required
+          ></v-text-field>
           <v-layout class="mt-4" row>
             <v-btn :to="loginRoute" :disabled="isRegistering" flat>Voltar</v-btn>
             <v-spacer></v-spacer>
@@ -82,6 +91,7 @@ export default {
       cpf: '',
       register: '',
       password: '',
+      rfid: '',
       passType: true,
       isRegistering: false,
       dialog: {
@@ -92,7 +102,7 @@ export default {
         color: '',
         route: ''
       },
-      loginRoute: '/client/login',
+      loginRoute: '/login',
       registerRoute: '/client/register',
       validationRules: validationRules
     }
@@ -106,7 +116,8 @@ export default {
           name: this.name,
           cpf: this.cpf,
           register: this.register,
-          password: this.password
+          password: this.password,
+          rfid: this.rfid
         }
 
         xs.fromPromise(insertClient(clientToSave))
@@ -115,7 +126,7 @@ export default {
             next: result => {
               if (result) {
                 this.dialog.title = 'Cadastrado com sucesso'
-                this.dialog.message = 'Dirija-se ao refeitório com sua carterinha estudantil e finalize seu cadastro!'
+                this.dialog.message = 'Usuário cadastrado com sucesso!'
                 this.dialog.button = 'Ir ao Login'
                 this.dialog.color = 'green darken-1'
                 this.dialog.route = this.loginRoute

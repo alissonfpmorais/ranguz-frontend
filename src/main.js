@@ -7,14 +7,14 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
 // Helpers
-/* import colors from 'vuetify/es5/util/colors' */
+import colors from 'vuetify/es5/util/colors'
 
 Vue.use(Vuetify, {
-  /* theme: {
-    primary: colors.lime.lighten1,
-    secondary: colors.orange.darken2,
-    accent: colors.yellow.accent3,
-  } */
+  theme: {
+    primary: colors.deepOrange.accent3,
+    secondary: colors.purple.darken1,
+    accent: colors.orange.accent3
+  }
 })
 
 Vue.config.productionTip = false

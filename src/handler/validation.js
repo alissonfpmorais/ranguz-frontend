@@ -10,6 +10,15 @@ const validationRules = {
   ],
   passField: [
     input => /^\d{4,}$/.test(input) || 'A senha deve conter pelo menos 4 dígitos'
+  ],
+  rfidField: [
+    input => /^[a-zA-Z0-9]{8}$/.test(input) || 'O RFID não é válido'
+  ],
+  productNameField: [
+    input => /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]{2,}$/.test(input) || 'Nome de produto inválido'
+  ],
+  valueField: [
+    input => /^[0-9.]{1,}$/.test(input) || 'Valor do produto inválido'
   ]
 }
 
